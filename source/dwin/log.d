@@ -33,37 +33,40 @@ public:
 	}
 
 	void opCall(S...)(LogLevel level, string module_, lazy string format_, lazy S args) nothrow {
-		foreach(LogHandlerFunc handler ; handlers)
+		foreach (LogHandlerFunc handler; handlers)
 			handler(level, module_, formatMessage(format_, args));
 	}
 
-	void Verbose(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
-		Log(LogLevel.VERBOSE, /*getName!*/this_, format, args);
+	void Verbose(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+		Log(LogLevel.VERBOSE, /*getName!*/ this_, format, args);
 	}
 
-	void Debug(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
-			Log(LogLevel.DEBUG, /*getName!*/this_, format, args);
+	void Debug(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+		Log(LogLevel.DEBUG, /*getName!*/ this_, format, args);
 	}
 
-	void Info(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
-		Log(LogLevel.INFO, /*getName!*/this_, format, args);
+	void Info(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+		Log(LogLevel.INFO, /*getName!*/ this_, format, args);
 	}
 
-	void Warning(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
-		Log(LogLevel.WARNING, /*getName!*/this_, format, args);
+	void Warning(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+		Log(LogLevel.WARNING, /*getName!*/ this_, format, args);
 	}
 
-	void Error(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
-		Log(LogLevel.ERROR, /*getName!*/this_, format, args);
+	void Error(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+		Log(LogLevel.ERROR, /*getName!*/ this_, format, args);
 	}
 
-	void Fatal(string this_=__FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
+	void Fatal(string this_ = __FUNCTION__, S...)(lazy string format, lazy S args) nothrow {
 		import std.c.stdlib : exit;
-		Log(LogLevel.FATAL, /*getName!*/this_, format, args);
+
+		Log(LogLevel.FATAL, /*getName!*/ this_, format, args);
 		exit(-1);
 	}
 
-	@property ref File LogFile() { return Log.logFile; }
+	@property ref File LogFile() {
+		return Log.logFile;
+	}
 
 private:
 	static Log mainLogger = null;
@@ -72,19 +75,21 @@ private:
 
 	template getName(alias this_) {
 		import std.string : startsWith, endsWith;
+
 		enum _ = fullyQualifiedName!this_;
 		static if (_.endsWith("__ctor"))
-			enum getName = _[0..$-"__ctor".length]~"this" ~ fill!(80-_.length+2);
+			enum getName = _[0 .. $ - "__ctor".length] ~ "this" ~ fill!(80 - _.length + 2);
 		else static if (_.endsWith("__dtor"))
-			enum getName = _[0..$-"__dtor".length]~"~this" ~ fill!(80-_.length+2);
+			enum getName = _[0 .. $ - "__dtor".length] ~ "~this" ~ fill!(80 - _.length + 2);
 		else
-			enum getName = fullyQualifiedName!this_ ~ fill!(80-_.length);
+			enum getName = fullyQualifiedName!this_ ~ fill!(80 - _.length);
 
 	}
 
 	static string fill(int n)() {
-		import std.range: repeat, take;
-		import std.conv: to;
+		import std.range : repeat, take;
+		import std.conv : to;
+
 		static if (n < 0)
 			return "";
 		return to!string(take(repeat(' '), n));
@@ -97,7 +102,8 @@ private:
 		return message;
 	}
 
-	version(Posix) {
+	version (Posix) {
+		//dfmt off
 		enum
 		{
 			COLOR_OFF = "\x1b[0m", /// reset color
@@ -172,36 +178,37 @@ private:
 			BG_I_CYAN   = "\x1b[0;106m", ///
 			BG_I_WHITE  = "\x1b[0;107m", ///
 		}
+		//dfmt on
 
 		static void TerminalHandler(LogLevel level, string module_, lazy string message) nothrow {
 			string icon;
 			string color;
 
 			final switch (level) {
-				case LogLevel.VERBOSE:
-					icon = "&";
-					color = FG_GREEN;
-					break;
-				case LogLevel.DEBUG:
-					icon = "+";
-					color = FG_YELLOW;
-					break;
-				case LogLevel.INFO:
-					icon = "*";
-					color = FG_CYAN;
-					break;
-				case LogLevel.WARNING:
-					icon = "#";
-					color = FG_PURPLE;
-					break;
-				case LogLevel.ERROR:
-					icon = "-";
-					color = FG_RED;
-					break;
-				case LogLevel.FATAL:
-					icon = "!";
-					color = FG_BLACK ~ BG_RED;
-					break;
+			case LogLevel.VERBOSE:
+				icon = "&";
+				color = FG_GREEN;
+				break;
+			case LogLevel.DEBUG:
+				icon = "+";
+				color = FG_YELLOW;
+				break;
+			case LogLevel.INFO:
+				icon = "*";
+				color = FG_CYAN;
+				break;
+			case LogLevel.WARNING:
+				icon = "#";
+				color = FG_PURPLE;
+				break;
+			case LogLevel.ERROR:
+				icon = "-";
+				color = FG_RED;
+				break;
+			case LogLevel.FATAL:
+				icon = "!";
+				color = FG_BLACK ~ BG_RED;
+				break;
 			}
 			try {
 				string levelText = format("[%1$s%3$s%2$s] [%1$s%4$s%2$s] %1$s%5$s%2$s", color, COLOR_OFF, icon, module_, message);
@@ -213,8 +220,10 @@ private:
 					stdout.writeln(levelText);
 					stdout.flush;
 				}
-			} catch (Exception) {
+			}
+			catch (Exception) {
 				import std.c.stdlib : exit;
+
 				exit(-2);
 			}
 		}
@@ -228,24 +237,24 @@ private:
 		string icon;
 
 		final switch (level) {
-			case LogLevel.VERBOSE:
-				icon = "&";
-				break;
-			case LogLevel.DEBUG:
-				icon = "+";
-				break;
-			case LogLevel.INFO:
-				icon = "*";
-				break;
-			case LogLevel.WARNING:
-				icon = "#";
-				break;
-			case LogLevel.ERROR:
-				icon = "-";
-				break;
-			case LogLevel.FATAL:
-				icon = "!";
-				break;
+		case LogLevel.VERBOSE:
+			icon = "&";
+			break;
+		case LogLevel.DEBUG:
+			icon = "+";
+			break;
+		case LogLevel.INFO:
+			icon = "*";
+			break;
+		case LogLevel.WARNING:
+			icon = "#";
+			break;
+		case LogLevel.ERROR:
+			icon = "-";
+			break;
+		case LogLevel.FATAL:
+			icon = "!";
+			break;
 		}
 		try {
 			string levelText = format("[%c] [%s]\t %s", icon, module_, message);
@@ -257,8 +266,10 @@ private:
 				stdout.writeln(levelText);
 				stdout.flush;
 			}
-		} catch (Exception) {
+		}
+		catch (Exception) {
 			import std.c.stdlib : exit;
+
 			exit(-2);
 		}
 	}
@@ -266,29 +277,30 @@ private:
 	static void FileLog(LogLevel level, string module_, lazy string message) nothrow {
 		import std.string;
 		import std.datetime;
+
 		if (!Log.logFile.isOpen)
 			return;
 		string icon;
 
 		final switch (level) {
-			case LogLevel.VERBOSE:
-				icon = "&";
-				break;
-			case LogLevel.DEBUG:
-				icon = "+";
-				break;
-			case LogLevel.INFO:
-				icon = "*";
-				break;
-			case LogLevel.WARNING:
-				icon = "#";
-				break;
-			case LogLevel.ERROR:
-				icon = "-";
-				break;
-			case LogLevel.FATAL:
-				icon = "!";
-				break;
+		case LogLevel.VERBOSE:
+			icon = "&";
+			break;
+		case LogLevel.DEBUG:
+			icon = "+";
+			break;
+		case LogLevel.INFO:
+			icon = "*";
+			break;
+		case LogLevel.WARNING:
+			icon = "#";
+			break;
+		case LogLevel.ERROR:
+			icon = "-";
+			break;
+		case LogLevel.FATAL:
+			icon = "!";
+			break;
 		}
 		try {
 			SysTime t = Clock.currTime;
@@ -301,8 +313,10 @@ private:
 
 			logFile.writeln(levelText);
 			logFile.flush();
-		} catch (Exception) {
+		}
+		catch (Exception) {
 			import std.c.stdlib : exit;
+
 			exit(-2);
 		}
 	}

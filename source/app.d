@@ -12,8 +12,9 @@ int main(string[] args) {
 	}
 
 	auto dwin = new DWin();
+	scope (exit)
+		dwin.destroy;
 	dwin.Run();
-	dwin.destroy;
 
 	return 0;
 }

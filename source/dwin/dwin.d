@@ -24,7 +24,7 @@ public:
 	void Run() {
 		quit = false;
 		while (!quit) {
-			const xcb_generic_event_t * e = xcb_wait_for_event(xcb.Connection);
+			const xcb_generic_event_t* e = xcb_wait_for_event(xcb.Connection);
 
 			XCBEvent ev = cast(XCBEvent)(e.response_type & ~0x80);
 
@@ -34,50 +34,50 @@ public:
 				break;
 
 			case XCB_BUTTON_RELEASE:
-				onButtonRelease(cast(xcb_button_release_event_t *)e);
+				onButtonRelease(cast(xcb_button_release_event_t*)e);
 				break;
 
 			case XCB_BUTTON_PRESS:
-				onButtonPress(cast(xcb_button_press_event_t *)e);
+				onButtonPress(cast(xcb_button_press_event_t*)e);
 				break;
 			case XCB_CLIENT_MESSAGE:
-				onClientMessage(cast(xcb_client_message_event_t *)e);
+				onClientMessage(cast(xcb_client_message_event_t*)e);
 				break;
 			case XCB_CONFIGURE_REQUEST:
-				onConfigureRequest(cast(xcb_configure_request_event_t *)e);
+				onConfigureRequest(cast(xcb_configure_request_event_t*)e);
 				break;
 			case XCB_CONFIGURE_NOTIFY:
-				onConfigureNotify(cast(xcb_configure_notify_event_t *)e);
+				onConfigureNotify(cast(xcb_configure_notify_event_t*)e);
 				break;
 			case XCB_DESTROY_NOTIFY:
-				onDestroyNotify(cast(xcb_destroy_notify_event_t *)e);
+				onDestroyNotify(cast(xcb_destroy_notify_event_t*)e);
 				break;
 			case XCB_ENTER_NOTIFY:
-				onEnterNotify(cast(xcb_enter_notify_event_t *)e);
+				onEnterNotify(cast(xcb_enter_notify_event_t*)e);
 				break;
 			case XCB_EXPOSE:
-				onExpose(cast(xcb_expose_event_t *)e);
+				onExpose(cast(xcb_expose_event_t*)e);
 				break;
 			case XCB_FOCUS_IN:
-				onFocusIn(cast(xcb_focus_in_event_t *)e);
+				onFocusIn(cast(xcb_focus_in_event_t*)e);
 				break;
 			case XCB_KEY_PRESS:
-				onKeyPress(cast(xcb_key_press_event_t *)e);
+				onKeyPress(cast(xcb_key_press_event_t*)e);
 				break;
 			case XCB_MAPPING_NOTIFY:
-				onMappingNotify(cast(xcb_mapping_notify_event_t *)e);
+				onMappingNotify(cast(xcb_mapping_notify_event_t*)e);
 				break;
 			case XCB_MAP_REQUEST:
-				onMapRequest(cast(xcb_map_request_event_t *)e);
+				onMapRequest(cast(xcb_map_request_event_t*)e);
 				break;
 			case XCB_MOTION_NOTIFY:
-				onMotionNotify(cast(xcb_motion_notify_event_t *)e);
+				onMotionNotify(cast(xcb_motion_notify_event_t*)e);
 				break;
 			case XCB_PROPERTY_NOTIFY:
-				onPropertyNotify(cast(xcb_property_notify_event_t *)e);
+				onPropertyNotify(cast(xcb_property_notify_event_t*)e);
 				break;
 			case XCB_UNMAP_NOTIFY:
-				onUnmapNotify(cast(xcb_unmap_notify_event_t *)e);
+				onUnmapNotify(cast(xcb_unmap_notify_event_t*)e);
 				break;
 			}
 
@@ -98,20 +98,24 @@ private:
 
 	enum WMAtoms : AtomName {
 		Protocols = AtomName(0, "WM_PROTOCOLS"),
-		Delete    = AtomName(1, "WM_DELETE_WINDOW"),
-		State     = AtomName(2, "WM_STATE"),
+		Delete = AtomName(1, "WM_DELETE_WINDOW"),
+		State = AtomName(2,
+			"WM_STATE"),
 		TakeFocus = AtomName(3, "WM_TAKE_FOCUS")
 	}
 
 	enum NETAtoms : AtomName {
-		Supported          = AtomName(0, "_NET_SUPPORTED"),
-		WMName             = AtomName(1, "_NET_WM_NAME"),
-		WMState            = AtomName(2, "_NET_WM_STATE"),
-		WMFullscreen       = AtomName(3, "_NET_WM_STATE_FULLSCREEN"),
-		ActiveWindow       = AtomName(4, "_NET_ACTIVE_WINDOW"),
-		WMWindowType       = AtomName(5, "_NET_WM_WINDOW_TYPE"),
-		WMWindowTypeDialog = AtomName(6, "_NET_WM_WINDOW_TYPE_DIALOG"),
-		ClientList         = AtomName(7, "_NET_CLIENT_LIST")
+		Supported = AtomName(0, "_NET_SUPPORTED"),
+		WMName = AtomName(1, "_NET_WM_NAME"),
+		WMState = AtomName(2,
+			"_NET_WM_STATE"),
+		WMFullscreen = AtomName(3, "_NET_WM_STATE_FULLSCREEN"),
+		ActiveWindow = AtomName(4,
+			"_NET_ACTIVE_WINDOW"),
+		WMWindowType = AtomName(5, "_NET_WM_WINDOW_TYPE"),
+		WMWindowTypeDialog = AtomName(6,
+			"_NET_WM_WINDOW_TYPE_DIALOG"),
+		ClientList = AtomName(7, "_NET_CLIENT_LIST")
 	}
 
 	struct CursorType {
@@ -120,9 +124,9 @@ private:
 	}
 
 	enum Cursors : CursorType {
-		Normal   = CursorType(0, CursorIcons.XC_left_ptr),
+		Normal = CursorType(0, CursorIcons.XC_left_ptr),
 		Resizing = CursorType(1, CursorIcons.XC_sizing),
-		Moving   = CursorType(2, CursorIcons.XC_fleur)
+		Moving = CursorType(2, CursorIcons.XC_fleur)
 	}
 
 	Log log;
@@ -132,7 +136,7 @@ private:
 	bool quit;
 	HandlingEvent handlingEvent = HandlingEvent.NONE;
 	xcb_drawable_t win;
-	xcb_get_geometry_reply_t * geom;
+	xcb_get_geometry_reply_t* geom;
 	enum Loc {
 		FIRST,
 		SECOND,
@@ -148,35 +152,35 @@ private:
 	Atom[EnumCount!(NETAtoms)()] lookupNETAtoms;
 	Cursor[EnumCount!(Cursors)()] cursors;
 
-	Event!(xcb_button_press_event_t *) onButtonPress;
-	Event!(xcb_client_message_event_t *) onClientMessage;
-	Event!(xcb_configure_request_event_t *) onConfigureRequest;
-	Event!(xcb_configure_notify_event_t *) onConfigureNotify;
-	Event!(xcb_destroy_notify_event_t *) onDestroyNotify;
-	Event!(xcb_enter_notify_event_t *) onEnterNotify;
-	Event!(xcb_expose_event_t *) onExpose;
-	Event!(xcb_focus_in_event_t *) onFocusIn;
-	Event!(xcb_key_press_event_t *) onKeyPress;
-	Event!(xcb_mapping_notify_event_t *) onMappingNotify;
-	Event!(xcb_map_request_event_t *) onMapRequest;
-	Event!(xcb_motion_notify_event_t *) onMotionNotify;
-	Event!(xcb_property_notify_event_t *) onPropertyNotify;
-	Event!(xcb_unmap_notify_event_t *) onUnmapNotify;
+	Event!(xcb_button_press_event_t*) onButtonPress;
+	Event!(xcb_client_message_event_t*) onClientMessage;
+	Event!(xcb_configure_request_event_t*) onConfigureRequest;
+	Event!(xcb_configure_notify_event_t*) onConfigureNotify;
+	Event!(xcb_destroy_notify_event_t*) onDestroyNotify;
+	Event!(xcb_enter_notify_event_t*) onEnterNotify;
+	Event!(xcb_expose_event_t*) onExpose;
+	Event!(xcb_focus_in_event_t*) onFocusIn;
+	Event!(xcb_key_press_event_t*) onKeyPress;
+	Event!(xcb_mapping_notify_event_t*) onMappingNotify;
+	Event!(xcb_map_request_event_t*) onMapRequest;
+	Event!(xcb_motion_notify_event_t*) onMotionNotify;
+	Event!(xcb_property_notify_event_t*) onPropertyNotify;
+	Event!(xcb_unmap_notify_event_t*) onUnmapNotify;
 
-	Event!(xcb_button_release_event_t *) onButtonRelease;
+	Event!(xcb_button_release_event_t*) onButtonRelease;
 
-	void logEvent(T, string name)(T * e) {
+	void logEvent(T, string name)(T* e) {
 		log.Debug("");
 	}
 
 	void bind() {
-		xcb.GrabKey(0, XCB_MOD_MASK_ANY, 9,	XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+		xcb.GrabKey(0, XCB_MOD_MASK_ANY, 9, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
 
-		xcb.GrabButton(1, XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE,
-			XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_NONE, 1, XCB_MOD_MASK_ANY);
+		xcb.GrabButton(1, XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
+			XCB_GRAB_MODE_ASYNC, XCB_NONE, 1, XCB_MOD_MASK_ANY);
 
-		xcb.GrabButton(1,	XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE,
-			XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_NONE, 3, XCB_MOD_MASK_ANY);
+		xcb.GrabButton(1, XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
+			XCB_GRAB_MODE_ASYNC, XCB_NONE, 3, XCB_MOD_MASK_ANY);
 	}
 
 	void setup() {
@@ -199,16 +203,12 @@ private:
 
 		bar = new Window(xcb, 400, 100, "DWin-Bar");
 		bar.Drawable.ChangeColor(0xFF00FF00, 0x00FF00FF);
-		bar.Drawable.DrawRectangle([
-			xcb_rectangle_t(0, 0, 200, 50),
-			xcb_rectangle_t(200, 50, 200, 50)
-		], true);
+		bar.Drawable.DrawRectangle([xcb_rectangle_t(0, 0, 200, 50), xcb_rectangle_t(200, 50, 200, 50)], true);
 		bar.Map();
 		bar.Render();
 		xcb.Flush();
 
-if (false)
-		{
+		if (false) {
 			onButtonPress ~= &logEvent!(xcb_button_press_event_t, "onButtonPress");
 			onClientMessage ~= &logEvent!(xcb_client_message_event_t, "onClientMessage");
 			onConfigureRequest ~= &logEvent!(xcb_configure_request_event_t, "onConfigureRequest");
@@ -237,18 +237,18 @@ if (false)
 		xcb.Root.ChangeAttributes(XCB_CW_EVENT_MASK, &eventMask);
 	}
 
-	void renderBar(xcb_expose_event_t * e) {
+	void renderBar(xcb_expose_event_t* e) {
 		log.Info("");
 		if (e.window == bar.Window) {
 			bar.Render();
 		}
 	}
 
-	void shouldQuit(xcb_key_press_event_t * key) {
-		quit = key.detail == 9 /* Escape */;
+	void shouldQuit(xcb_key_press_event_t* key) {
+		quit = key.detail == 9 /* Escape */ ;
 	}
 
-	void doMovingWindow(xcb_button_press_event_t * be) {
+	void doMovingWindow(xcb_button_press_event_t* be) {
 		if (!(be.state & XCB_MOD_MASK_CONTROL))
 			return;
 
@@ -260,7 +260,8 @@ if (false)
 
 		// Get window size
 		geom = xcb_get_geometry_reply(xcb.Connection, xcb_get_geometry(xcb.Connection, win), null);
-		xcb_query_pointer_reply_t *pointer = xcb_query_pointer_reply(xcb.Connection, xcb_query_pointer(xcb.Connection, xcb.Root.Window), null);
+		xcb_query_pointer_reply_t* pointer = xcb_query_pointer_reply(xcb.Connection, xcb_query_pointer(xcb.Connection,
+			xcb.Root.Window), null);
 
 		if (be.detail == 1) { //Left click
 			handlingEvent = HandlingEvent.MOVE;
@@ -271,12 +272,12 @@ if (false)
 		} else {
 			handlingEvent = HandlingEvent.RESIZE;
 			cursors[Cursors.Resizing.id].Apply();
-			pointerDiffX = pointer.root_x - (geom.x + geom.width/2);
-			pointerDiffY = pointer.root_y - (geom.y + geom.height/2);
+			pointerDiffX = pointer.root_x - (geom.x + geom.width / 2);
+			pointerDiffY = pointer.root_y - (geom.y + geom.height / 2);
 			oldGeom = *geom;
 
-			int pointX = (pointer.root_x - geom.x) / (geom.width  / 4)+1;
-			int pointY = (pointer.root_y - geom.y) / (geom.height / 4)+1;
+			int pointX = (pointer.root_x - geom.x) / (geom.width / 4) + 1;
+			int pointY = (pointer.root_y - geom.y) / (geom.height / 4) + 1;
 
 			log.Info("PointX: %d, PointY: %d", pointX, pointY);
 
@@ -300,17 +301,19 @@ if (false)
 
 			log.Info("Row: %s, Column: %s", row, column);
 		}
-		xcb.GrabPointer(0, XCB_EVENT_MASK_BUTTON_RELEASE
-			| XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
+		xcb.GrabPointer(0,
+			XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
 			XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_NONE, XCB_CURRENT_TIME);
 		xcb.Flush();
 	}
 
-	void handleMoving(xcb_motion_notify_event_t * e) {
+	void handleMoving(xcb_motion_notify_event_t* e) {
 		import std.algorithm.comparison : max;
+
 		if (handlingEvent == HandlingEvent.NONE)
 			return;
-		xcb_query_pointer_reply_t *pointer = xcb_query_pointer_reply(xcb.Connection, xcb_query_pointer(xcb.Connection, xcb.Root.Window), null);
+		xcb_query_pointer_reply_t* pointer = xcb_query_pointer_reply(xcb.Connection, xcb_query_pointer(xcb.Connection,
+			xcb.Root.Window), null);
 		if (handlingEvent == HandlingEvent.MOVE) {
 			geom = xcb_get_geometry_reply(xcb.Connection, xcb_get_geometry(xcb.Connection, win), null);
 
@@ -322,17 +325,15 @@ if (false)
 		} else if (handlingEvent == HandlingEvent.RESIZE) {
 			geom = xcb_get_geometry_reply(xcb.Connection, xcb_get_geometry(xcb.Connection, win), null);
 
-
 			int px = geom.x;
 			int py = geom.y;
 			int pw = geom.width; // pointer.root_x - geom.x + pointerDiffX;
 			int ph = geom.height; // pointer.root_y - geom.y + pointerDiffY;
 
-
 			if (row == Loc.FIRST) {
 				if (column == Loc.FIRST) {
 					immutable uint oldPx = px;
-					px = (pointer.root_x) - (pointerDiffX + oldGeom.width	/ 2);
+					px = (pointer.root_x) - (pointerDiffX + oldGeom.width / 2);
 					pw += oldPx - px;
 
 					immutable uint oldPy = py;
@@ -344,7 +345,7 @@ if (false)
 					py = (pointer.root_y) - (pointerDiffY + oldGeom.height / 2);
 					ph += oldPy - py;
 				} else /*if (column == Loc.THIRD) */ {
-					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width	/ 2);
+					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width / 2);
 
 					immutable uint oldPy = py;
 					py = (pointer.root_y) - (pointerDiffY + oldGeom.height / 2);
@@ -353,27 +354,26 @@ if (false)
 			} else if (row == Loc.SECOND) {
 				if (column == Loc.FIRST) {
 					immutable uint oldPx = px;
-					px = (pointer.root_x) - (pointerDiffX + oldGeom.width	/ 2);
+					px = (pointer.root_x) - (pointerDiffX + oldGeom.width / 2);
 					pw += oldPx - px;
 
 				} else if (column == Loc.SECOND) {
 
 				} else /*if (column == Loc.THIRD) */ {
-					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width	/ 2);
+					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width / 2);
 				}
 			} else /*if (row == Loc.THIRD) */ {
 				if (column == Loc.FIRST) {
 					immutable uint oldPx = px;
-					px = (pointer.root_x) - (pointerDiffX + oldGeom.width	/ 2);
+					px = (pointer.root_x) - (pointerDiffX + oldGeom.width / 2);
 					pw += oldPx - px;
 
-					ph = (pointer.root_y - oldGeom.y) - (pointerDiffY - oldGeom.height/2);
+					ph = (pointer.root_y - oldGeom.y) - (pointerDiffY - oldGeom.height / 2);
 				} else if (column == Loc.SECOND) {
 
-
-					ph = (pointer.root_y - oldGeom.y) - (pointerDiffY - oldGeom.height/2);
+					ph = (pointer.root_y - oldGeom.y) - (pointerDiffY - oldGeom.height / 2);
 				} else /*if (column == Loc.THIRD) */ {
-					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width	/ 2);
+					pw = (pointer.root_x - oldGeom.x) - (pointerDiffX - oldGeom.width / 2);
 					ph = (pointer.root_y - oldGeom.y) - (pointerDiffY - oldGeom.height / 2);
 				}
 			}
@@ -392,7 +392,7 @@ if (false)
 		}
 	}
 
-	void buttonRelease(xcb_button_release_event_t * e) {
+	void buttonRelease(xcb_button_release_event_t* e) {
 		handlingEvent = HandlingEvent.NONE;
 		cursors[Cursors.Normal.id].Apply();
 		xcb.UngrabPointer(XCB_CURRENT_TIME);
