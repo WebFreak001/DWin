@@ -19,7 +19,7 @@ public:
 
 	/// Removes a callback $(PARAM cb)
 	void opOpAssign(string op : "-")(cbFunction cb) {
-		remove(cb);
+		Remove(cb);
 	}
 
 	/// Removes a callback $(PARAM cb)

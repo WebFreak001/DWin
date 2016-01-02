@@ -11,7 +11,7 @@ XEPHYRPID=$!
 sleep 1
 DISPLAY=$XPORT
 
-feh --bg-max ~/Pictures/Wallpaper.arch/archwall_dark_purple.png
+feh --bg-max test/bg.png
 xterm &
 xterm &
 #lxterminal &

@@ -75,7 +75,7 @@ private:
 		enum _ = fullyQualifiedName!this_;
 		static if (_.endsWith("__ctor"))
 			enum getName = _[0..$-"__ctor".length]~"this" ~ fill!(80-_.length+2);
-		else static if (_.endsWith("__ctor"))
+		else static if (_.endsWith("__dtor"))
 			enum getName = _[0..$-"__dtor".length]~"~this" ~ fill!(80-_.length+2);
 		else
 			enum getName = fullyQualifiedName!this_ ~ fill!(80-_.length);

@@ -275,7 +275,7 @@ if (false)
 			pointerDiffY = pointer.root_y - (geom.y + geom.height/2);
 			oldGeom = *geom;
 
-			int pointX = (pointer.root_x - geom.x) / (geom.width	/ 4)+1;
+			int pointX = (pointer.root_x - geom.x) / (geom.width  / 4)+1;
 			int pointY = (pointer.root_y - geom.y) / (geom.height / 4)+1;
 
 			log.Info("PointX: %d, PointY: %d", pointX, pointY);
